@@ -530,7 +530,46 @@ em { font-style: normal; color: var(--giallo); }
 .apertura__titolo .riga:nth-child(1) .parola:nth-child(1) > span { animation-delay: .15s; }
 .apertura__titolo .riga:nth-child(1) .parola:nth-child(2) > span { animation-delay: .27s; }
 .apertura__titolo .riga:nth-child(2) .parola:nth-child(1) > span { animation-delay: .45s; }
-.apertura__titolo .riga:nth-child(2) .parola:nth-child(2) > span { animation-delay: .57s; }
+
+/* "noi." portato dal carro gru (movimento gestito da main.js) */
+.apertura__titolo { position: relative; }
+.noi { display: inline-block; position: relative; will-change: transform; }
+.noi__testo { display: inline-block; transform-origin: 50% 0; }
+.noi__base { display: inline-block; width: 0; height: 0; vertical-align: baseline; }
+/* nascosto finché parte l'animazione; se lo script non parte, compare comunque dopo 4 s */
+.js .noi[data-attesa] { opacity: 0; animation: compari-noi 0s 4s forwards; }
+@keyframes compari-noi { to { opacity: 1; } }
+
+.carro {
+  position: absolute; left: 0; top: 0; z-index: 3; display: none; pointer-events: none;
+  will-change: transform;
+}
+.carro.attivo { display: block; }
+.carro__disegno { width: 100%; height: 100%; overflow: visible; }
+.carro__braccio { stroke: var(--giallo); stroke-width: 11; stroke-linecap: round; }
+.carro__braccio-ombra { stroke: #1a1b20; stroke-width: 15; stroke-linecap: round; }
+.carro__puleggia { fill: #2b2e37; stroke: var(--giallo); stroke-width: 3; }
+.carro__torretta, .carro__telaio { fill: #2b2e37; }
+.carro__cassone, .carro__cabina { fill: var(--giallo); stroke: #1a1b20; stroke-width: 3; }
+.carro__fascia { fill: #1a1b20; }
+.carro__scritta { font: 800 24px var(--titoli); letter-spacing: .06em; fill: #1a1b20; text-anchor: middle; }
+.carro__vetro { fill: #1c2230; }
+.carro__faro { fill: #fffbe6; }
+.carro__lampeggiante { fill: #ff8a00; animation: lampeggiante-carro .5s steps(1) infinite; }
+@keyframes lampeggiante-carro { 50% { fill: #ffd76a; } }
+.carro__ruota { transform-box: fill-box; transform-origin: center; }
+.carro__ruota circle { fill: #111; }
+.carro__ruota .carro__mozzo { fill: #8a8f99; }
+.carro__raggi { stroke: #3a3d45; stroke-width: 3; }
+.carro__cavo {
+  position: absolute; width: 3px; transform: translateX(-50%); background: #d4d7dd;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .35);
+}
+.carro__gancio {
+  position: absolute; left: 50%; top: 100%; width: 18px; height: 26px; max-width: none; transform: translate(-50%, -2px);
+  overflow: visible; fill: none; stroke: #d4d7dd; stroke-width: 4; stroke-linecap: round;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .6));
+}
 @keyframes sali { to { transform: none; } }
 
 /* barra a LED come sul tetto di un carro attrezzi: doppio lampo, alternato sinistra/destra.
@@ -723,6 +762,7 @@ em { font-style: normal; color: var(--giallo); }
 }
 html.ferme { scroll-behavior: auto; }
 .ferme .rivela { opacity: 1 !important; transform: none !important; }
+.ferme .noi[data-attesa] { opacity: 1; }
 
 
 @media (prefers-reduced-motion: reduce) {
@@ -730,4 +770,5 @@ html.ferme { scroll-behavior: auto; }
   html { scroll-behavior: auto; }
   .js .rivela { opacity: 1; transform: none; }
   .apertura__titolo .parola > span { transform: none; }
+  .js .noi[data-attesa] { opacity: 1; animation: none; }
 }

@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=6">
+  <link rel="stylesheet" href="assets/css/style.css?v=9">
   <script>document.documentElement.classList.add('js');try{if(localStorage.getItem('animazioni')==='ferme')document.documentElement.classList.add('ferme')}catch(e){}</script>
   <script type="application/ld+json">
   {
@@ -96,7 +96,32 @@
       <p class="etichetta rivela"><span class="pallino" aria-hidden="true"></span> 24h/7 – Sempre operativi</p>
       <h1 class="apertura__titolo">
         <span class="riga"><span class="parola"><span>In</span></span> <span class="parola"><span>panne?</span></span></span>
-        <span class="riga"><span class="parola"><span><em>Arriviamo</em></span></span> <span class="parola"><span>noi.</span></span></span>
+        <span class="riga"><span class="parola"><span><em>Arriviamo</em></span></span> <span class="noi" data-attesa><span class="noi__testo">noi.</span><span class="noi__base" aria-hidden="true"></span></span></span>
+        <!-- carro gru che porta "noi." al suo posto (decorativo, gestito da main.js) -->
+        <span class="carro" aria-hidden="true">
+          <svg viewBox="0 0 400 200" class="carro__disegno">
+            <!-- braccio della gru -->
+            <path d="M152 112 L12 10" class="carro__braccio-ombra"/>
+            <path d="M152 112 L12 10" class="carro__braccio"/>
+            <circle cx="12" cy="10" r="7" class="carro__puleggia"/>
+            <rect x="138" y="98" width="34" height="22" rx="3" class="carro__torretta"/>
+            <!-- telaio e cassone -->
+            <rect x="128" y="160" width="262" height="12" class="carro__telaio"/>
+            <rect x="134" y="118" width="152" height="44" rx="3" class="carro__cassone"/>
+            <rect x="134" y="148" width="152" height="6" class="carro__fascia"/>
+            <text x="210" y="143" class="carro__scritta">AGLIATA</text>
+            <!-- cabina -->
+            <path d="M290 162V100q0-8 8-8h52q10 0 16 10l22 38q4 6 4 14v8Z" class="carro__cabina"/>
+            <path d="M302 102h46q6 0 10 6l14 24h-70Z" class="carro__vetro"/>
+            <rect x="316" y="84" width="28" height="8" rx="3" class="carro__lampeggiante"/>
+            <rect x="384" y="146" width="8" height="8" rx="2" class="carro__faro"/>
+            <!-- ruote -->
+            <g class="carro__ruota"><circle cx="175" cy="182" r="17"/><circle cx="175" cy="182" r="7" class="carro__mozzo"/><path d="M175 167v30M160 182h30" class="carro__raggi"/></g>
+            <g class="carro__ruota"><circle cx="215" cy="182" r="17"/><circle cx="215" cy="182" r="7" class="carro__mozzo"/><path d="M215 167v30M200 182h30" class="carro__raggi"/></g>
+            <g class="carro__ruota"><circle cx="345" cy="182" r="17"/><circle cx="345" cy="182" r="7" class="carro__mozzo"/><path d="M345 167v30M330 182h30" class="carro__raggi"/></g>
+          </svg>
+          <span class="carro__cavo"><svg viewBox="0 0 20 28" class="carro__gancio"><path d="M10 0v10M10 10a6 6 0 1 1-6 6" /></svg></span>
+        </span>
       </h1>
       <p class="apertura__testo rivela">Soccorso stradale, mezzi pesanti, traino e trasporto veicoli a Monza e in tutta la Brianza.
         Giorno e notte, festivi compresi, da oltre 25 anni.</p>
@@ -493,6 +518,6 @@
   <symbol id="i-freccia" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6 6 6-6 6"/></symbol>
 </svg>
 
-<script src="assets/js/main.js?v=5" defer></script>
+<script src="assets/js/main.js?v=9" defer></script>
 </body>
 </html>
