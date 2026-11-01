@@ -18,6 +18,8 @@ HTML, CSS e JavaScript senza framework; PHP solo per l'invio del modulo contatti
 
 ## Anteprima
 
+Anteprima online: https://ndoga.github.io/agliata-sito/ (si aggiorna da sola a ogni modifica su `main`).
+
 Su GitHub Pages il sito si vede completo, ma il modulo contatti non invia (Pages non esegue PHP).
 
 ## Pubblicazione su Aruba
