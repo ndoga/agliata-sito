@@ -164,6 +164,54 @@
     modulo.addEventListener('input', e => e.target.closest('.campo')?.classList.remove('errore'));
   }
 
+  /* Profondità: le foto di "Chi siamo" scorrono a velocità diverse */
+  const parallasse = [...document.querySelectorAll('[data-parallasse]')];
+  if (parallasse.length && !movimentoRidotto) {
+    const aggiornaParallasse = () => {
+      parallasse.forEach(el => {
+        const r = el.getBoundingClientRect();
+        if (r.bottom < 0 || r.top > innerHeight) return;
+        const spostamento = (r.top + r.height / 2 - innerHeight / 2) * +el.dataset.parallasse;
+        el.querySelector('img').style.transform = `translateY(${spostamento.toFixed(1)}px) scale(1.12)`;
+      });
+    };
+    addEventListener('scroll', aggiornaParallasse, { passive: true });
+    aggiornaParallasse();
+  }
+
+  /* Galleria: visore a tutto schermo con frecce e tastiera */
+  const visore = document.getElementById('visore');
+  const fotoGalleria = [...document.querySelectorAll('.galleria__voce')];
+  if (visore && fotoGalleria.length && visore.showModal) {
+    const img = visore.querySelector('img');
+    const didascalia = visore.querySelector('figcaption');
+    let attuale = 0;
+    const mostraFoto = i => {
+      attuale = (i + fotoGalleria.length) % fotoGalleria.length;
+      const v = fotoGalleria[attuale];
+      img.src = v.dataset.grande;
+      img.alt = v.querySelector('img').alt;
+      didascalia.textContent = v.querySelector('span').textContent;
+    };
+    fotoGalleria.forEach((v, i) => v.addEventListener('click', () => { mostraFoto(i); visore.showModal(); }));
+    visore.querySelector('.visore__chiudi').addEventListener('click', () => visore.close());
+    visore.querySelector('.visore__freccia--prec').addEventListener('click', () => mostraFoto(attuale - 1));
+    visore.querySelector('.visore__freccia--succ').addEventListener('click', () => mostraFoto(attuale + 1));
+    visore.addEventListener('click', e => { if (e.target === visore) visore.close(); });
+    visore.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft') mostraFoto(attuale - 1);
+      if (e.key === 'ArrowRight') mostraFoto(attuale + 1);
+    });
+    let inizioX = null;
+    visore.addEventListener('touchstart', e => { inizioX = e.touches[0].clientX; }, { passive: true });
+    visore.addEventListener('touchend', e => {
+      if (inizioX === null) return;
+      const dx = e.changedTouches[0].clientX - inizioX;
+      if (Math.abs(dx) > 50) mostraFoto(attuale + (dx < 0 ? 1 : -1));
+      inizioX = null;
+    });
+  }
+
   /* Anno nel piè di pagina */
   const anno = document.getElementById('anno');
   if (anno) anno.textContent = new Date().getFullYear();
