@@ -37,10 +37,23 @@
   /* Intestazione compatta e barra di chiamata dopo lo scorrimento */
   const testata = document.getElementById('testata');
   const barra = document.querySelector('.barra-chiama');
+  const fluttuante = document.querySelector('.chiama-fluttuante');
+  const letto = document.querySelector('.avanzamento span');
+  const sfondoNumeri = document.querySelector('.numeri__sfondo');
   const aggiornaScorrimento = () => {
     const y = scrollY;
     testata.classList.toggle('compatta', y > 40);
     if (barra) barra.classList.toggle('visibile', y > innerHeight * .6);
+    if (fluttuante) {
+      // nascosto in apertura e quando si arriva ai contatti
+      const contatti = document.getElementById('contatti').getBoundingClientRect().top;
+      fluttuante.classList.toggle('visibile', y > innerHeight * .8 && contatti > innerHeight * .5);
+    }
+    if (letto) letto.style.setProperty('--letto', (y / Math.max(1, doc.scrollHeight - innerHeight)).toFixed(4));
+    if (sfondoNumeri && !fermo()) {
+      const r = sfondoNumeri.parentElement.getBoundingClientRect();
+      if (r.bottom > 0 && r.top < innerHeight) sfondoNumeri.style.setProperty('--sx', `${(r.top - innerHeight) * .5}px`);
+    }
   };
   addEventListener('scroll', aggiornaScorrimento, { passive: true });
   aggiornaScorrimento();
@@ -110,11 +123,11 @@
   }
 
   /* Linea dei passi che si riempie scorrendo */
-  const passi = document.querySelector('.passi');
+  const passi = document.querySelector('.passi-percorso');
   if (passi && !movimentoRidotto) {
     const aggiornaPassi = () => {
       const r = passi.getBoundingClientRect();
-      const p = Math.min(Math.max((innerHeight * .8 - r.top) / (r.height + innerHeight * .3), 0), 1);
+      const p = Math.min(Math.max((innerHeight * .75 - r.top) / (r.height + innerHeight * .2), 0), 1);
       passi.style.setProperty('--avanzamento', p.toFixed(3));
     };
     addEventListener('scroll', aggiornaPassi, { passive: true });
@@ -257,6 +270,31 @@
       const dx = e.changedTouches[0].clientX - inizioX;
       if (Math.abs(dx) > 50) mostraFoto(attuale + (dx < 0 ? 1 : -1));
       inizioX = null;
+    });
+  }
+
+  /* Foto dell'apertura che segue un poco il mouse */
+  const apertura = document.querySelector('.apertura');
+  const fotoApertura = document.querySelector('.apertura__foto');
+  if (apertura && fotoApertura && matchMedia('(hover: hover)').matches) {
+    apertura.addEventListener('pointermove', e => {
+      if (fermo()) return;
+      const x = e.clientX / innerWidth - .5, y = e.clientY / innerHeight - .5;
+      fotoApertura.style.setProperty('--fx', `${(-x * 22).toFixed(1)}px`);
+      fotoApertura.style.setProperty('--fy', `${(-y * 16).toFixed(1)}px`);
+    });
+  }
+
+  /* Pulsanti calamitati */
+  if (matchMedia('(hover: hover)').matches) {
+    document.querySelectorAll('[data-calamita]').forEach(b => {
+      b.addEventListener('pointermove', e => {
+        if (fermo()) return;
+        const r = b.getBoundingClientRect();
+        const x = e.clientX - r.left - r.width / 2, y = e.clientY - r.top - r.height / 2;
+        b.style.transform = `translate(${(x * .18).toFixed(1)}px, ${(y * .3).toFixed(1)}px)`;
+      });
+      b.addEventListener('pointerleave', () => { b.style.transform = ''; });
     });
   }
 

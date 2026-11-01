@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=3">
+  <link rel="stylesheet" href="assets/css/style.css?v=6">
   <script>document.documentElement.classList.add('js');try{if(localStorage.getItem('animazioni')==='ferme')document.documentElement.classList.add('ferme')}catch(e){}</script>
   <script type="application/ld+json">
   {
@@ -74,6 +74,8 @@
   </div>
 </header>
 
+<div class="avanzamento" aria-hidden="true"><span></span></div>
+
 <main id="contenuto">
 
   <!-- Apertura -->
@@ -86,19 +88,24 @@
     <div class="apertura__griglia" aria-hidden="true"></div>
 
     <div class="contenitore apertura__contenuto">
-      <p class="etichetta rivela"><span class="pallino" aria-hidden="true"></span> Operativi adesso · 24 ore su 24</p>
+      <div class="barra-led" aria-hidden="true">
+        <span class="barra-led__lato barra-led__lato--sx"><i></i><i></i><i></i><i></i><i></i></span>
+        <span class="barra-led__centro"></span>
+        <span class="barra-led__lato barra-led__lato--dx"><i></i><i></i><i></i><i></i><i></i></span>
+      </div>
+      <p class="etichetta rivela"><span class="pallino" aria-hidden="true"></span> 24h/7 – Sempre operativi</p>
       <h1 class="apertura__titolo">
-        <span class="riga rivela">In panne?</span>
-        <span class="riga rivela"><em>Arriviamo</em> noi.</span>
+        <span class="riga"><span class="parola"><span>In</span></span> <span class="parola"><span>panne?</span></span></span>
+        <span class="riga"><span class="parola"><span><em>Arriviamo</em></span></span> <span class="parola"><span>noi.</span></span></span>
       </h1>
       <p class="apertura__testo rivela">Soccorso stradale, mezzi pesanti, traino e trasporto veicoli a Monza e in tutta la Brianza.
         Giorno e notte, festivi compresi, da oltre 25 anni.</p>
       <div class="apertura__azioni rivela">
-        <a class="pulsante pulsante--grande pulsante--pulsa" href="tel:+393389098999">
+        <a class="pulsante pulsante--grande pulsante--pulsa" data-calamita href="tel:+393389098999">
           <svg class="icona" aria-hidden="true"><use href="#i-telefono"/></svg>
           Chiama ora · 338 909 8999
         </a>
-        <a class="pulsante pulsante--contorno pulsante--grande" href="#servizi">Scopri i servizi</a>
+        <a class="pulsante pulsante--contorno pulsante--grande" data-calamita href="#servizi">Scopri i servizi</a>
       </div>
     </div>
     <a class="apertura__giu" href="#servizi" aria-label="Scorri ai servizi"><span></span></a>
@@ -114,6 +121,7 @@
 
   <!-- Numeri -->
   <section class="numeri">
+    <div class="numeri__sfondo" aria-hidden="true">Sempre operativi · Giorno e notte · Sempre operativi · Giorno e notte ·</div>
     <div class="contenitore numeri__griglia">
       <div class="numero rivela">
         <strong><span data-conta="25">25</span>+</strong>
@@ -143,7 +151,8 @@
       </div>
 
       <div class="servizi">
-        <article class="servizio rivela" data-inclina>
+        <article class="servizio servizio--foto rivela" data-inclina>
+          <img class="servizio__foto" src="assets/img/intervento-notte-800.jpg" alt="" loading="lazy">
           <div class="servizio__icona"><svg class="icona" aria-hidden="true"><use href="#i-soccorso"/></svg></div>
           <h3>Soccorso stradale 24h</h3>
           <ul>
@@ -155,7 +164,8 @@
           <span class="servizio__numero" aria-hidden="true">01</span>
         </article>
 
-        <article class="servizio rivela" data-inclina>
+        <article class="servizio servizio--foto rivela" data-inclina>
+          <img class="servizio__foto" src="assets/img/gru-autobus-800.jpg" alt="" loading="lazy">
           <div class="servizio__icona"><svg class="icona" aria-hidden="true"><use href="#i-camion"/></svg></div>
           <h3>Soccorso mezzi pesanti</h3>
           <ul>
@@ -167,7 +177,8 @@
           <span class="servizio__numero" aria-hidden="true">02</span>
         </article>
 
-        <article class="servizio rivela" data-inclina>
+        <article class="servizio servizio--foto rivela" data-inclina>
+          <img class="servizio__foto" src="assets/img/scania-carico-800.jpg" alt="" loading="lazy">
           <div class="servizio__icona"><svg class="icona" aria-hidden="true"><use href="#i-bisarca"/></svg></div>
           <h3>Trasporto mezzi leggeri e pesanti</h3>
           <ul>
@@ -179,7 +190,8 @@
           <span class="servizio__numero" aria-hidden="true">03</span>
         </article>
 
-        <article class="servizio rivela" data-inclina>
+        <article class="servizio servizio--foto rivela" data-inclina>
+          <img class="servizio__foto" src="assets/img/carro-iveco-800.jpg" alt="" loading="lazy">
           <div class="servizio__icona"><svg class="icona" aria-hidden="true"><use href="#i-traino"/></svg></div>
           <h3>Traino veicoli</h3>
           <ul>
@@ -200,7 +212,8 @@
           <span class="servizio__numero" aria-hidden="true">05</span>
         </article>
 
-        <article class="servizio rivela" data-inclina>
+        <article class="servizio servizio--foto rivela" data-inclina>
+          <img class="servizio__foto" src="assets/img/bisarca-furgone-800.jpg" alt="" loading="lazy">
           <div class="servizio__icona"><svg class="icona" aria-hidden="true"><use href="#i-plus"/></svg></div>
           <h3>Servizi aggiuntivi</h3>
           <ul>
@@ -222,6 +235,7 @@
         <h2 class="sezione__titolo rivela">Tre passi e sei<br>di nuovo <em>in strada</em>.</h2>
       </div>
 
+      <div class="passi-percorso">
       <ol class="passi">
         <li class="passo rivela">
           <span class="passo__numero">01</span>
@@ -239,6 +253,8 @@
           <p>Ripariamo sul posto quando si può, altrimenti carichiamo il veicolo e lo portiamo dove preferisci.</p>
         </li>
       </ol>
+      <div class="passi__camion" aria-hidden="true"><svg class="icona"><use href="#i-camion"/></svg></div>
+      </div>
     </div>
   </section>
 
@@ -439,6 +455,12 @@
   </div>
 </footer>
 
+<!-- Chiamata fluttuante su schermi grandi -->
+<a class="chiama-fluttuante" href="tel:+393389098999" aria-label="Chiama il soccorso: 338 909 8999">
+  <svg class="icona" aria-hidden="true"><use href="#i-telefono"/></svg>
+  <span class="chiama-fluttuante__testo" aria-hidden="true">Soccorso 24h<strong>338 909 8999</strong></span>
+</a>
+
 <!-- Barra di chiamata fissa su telefono -->
 <a class="barra-chiama" href="tel:+393389098999">
   <svg class="icona" aria-hidden="true"><use href="#i-telefono"/></svg>
@@ -471,6 +493,6 @@
   <symbol id="i-freccia" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6 6 6-6 6"/></symbol>
 </svg>
 
-<script src="assets/js/main.js?v=3" defer></script>
+<script src="assets/js/main.js?v=5" defer></script>
 </body>
 </html>

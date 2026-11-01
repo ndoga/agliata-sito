@@ -164,21 +164,6 @@ em { font-style: normal; color: var(--giallo); }
 }
 
 /* luci di emergenza che si riflettono sul fondo */
-.apertura__luci {
-  position: absolute; inset: 0; pointer-events: none;
-  background:
-    radial-gradient(600px 400px at 10% 20%, rgba(255, 160, 0, .18), transparent 70%),
-    radial-gradient(500px 360px at 90% 40%, rgba(255, 195, 38, .12), transparent 70%);
-  animation: lampeggio 1.6s steps(1) infinite;
-  mix-blend-mode: screen;
-}
-@keyframes lampeggio {
-  0% { opacity: 1; }
-  25% { opacity: .35; }
-  50% { opacity: .9; }
-  75% { opacity: .25; }
-}
-
 .apertura__griglia {
   position: absolute; inset: 0; pointer-events: none; opacity: .5;
   background-image:
@@ -285,13 +270,13 @@ em { font-style: normal; color: var(--giallo); }
 }
 .passo h3 { font-size: 2rem; text-transform: uppercase; margin-bottom: 12px; }
 .passo p { color: var(--testo-tenue); margin: 0; }
-.passi { --avanzamento: 0; }
+.passi-percorso { --avanzamento: 0; position: relative; }
 .passi::before {
-  content: ""; position: absolute; left: 37px; right: 37px; top: 36px; height: 2px; z-index: -1;
+  content: ""; position: absolute; left: 37px; right: calc((100% - 80px) / 3 - 37px); top: 36px; height: 2px; z-index: -1;
   background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .15) 0 12px, transparent 12px 22px);
 }
 .passi::after {
-  content: ""; position: absolute; left: 37px; right: 37px; top: 36px; height: 2px; z-index: -1;
+  content: ""; position: absolute; left: 37px; right: calc((100% - 80px) / 3 - 37px); top: 36px; height: 2px; z-index: -1;
   background: var(--giallo); transform-origin: left; transform: scaleX(var(--avanzamento));
 }
 
@@ -524,6 +509,141 @@ em { font-style: normal; color: var(--giallo); }
   .visore__freccia { top: auto !important; bottom: 20px; transform: none !important; }
 }
 
+/* --- Effetti ------------------------------------------------------------ */
+
+/* barra di avanzamento a forma di strada */
+.avanzamento {
+  position: fixed; inset: 0 0 auto; z-index: 70; height: 5px; pointer-events: none;
+  background: rgba(255, 255, 255, .06);
+}
+.avanzamento span {
+  display: block; height: 100%; transform-origin: left; transform: scaleX(var(--letto, 0));
+  background:
+    repeating-linear-gradient(90deg, transparent 0 14px, rgba(13, 14, 17, .55) 14px 22px) 0 50% / 100% 1px no-repeat,
+    linear-gradient(90deg, var(--giallo-scuro), var(--giallo));
+  box-shadow: 0 0 12px rgba(255, 195, 38, .6);
+}
+
+/* apertura: titolo parola per parola */
+.apertura__titolo .parola { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .04em; }
+.apertura__titolo .parola > span { display: inline-block; transform: translateY(105%); animation: sali 1s var(--curva) forwards; }
+.apertura__titolo .riga:nth-child(1) .parola:nth-child(1) > span { animation-delay: .15s; }
+.apertura__titolo .riga:nth-child(1) .parola:nth-child(2) > span { animation-delay: .27s; }
+.apertura__titolo .riga:nth-child(2) .parola:nth-child(1) > span { animation-delay: .45s; }
+.apertura__titolo .riga:nth-child(2) .parola:nth-child(2) > span { animation-delay: .57s; }
+@keyframes sali { to { transform: none; } }
+
+/* barra a LED come sul tetto di un carro attrezzi: doppio lampo, alternato sinistra/destra.
+   Ciclo di 1,6 s = 2,5 lampi al secondo, sotto la soglia di 3 indicata dalle WCAG (2.3.1) */
+.barra-led {
+  display: flex; width: fit-content; align-items: center; gap: 6px; margin-bottom: 22px; padding: 6px 8px;
+  border-radius: 10px; background: linear-gradient(#22252d, #121318);
+  border: 1px solid rgba(255, 255, 255, .1); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08), 0 8px 24px -10px #000;
+}
+.barra-led__lato { display: flex; gap: 4px; }
+.barra-led__centro { width: 34px; height: 12px; border-radius: 3px; background: rgba(255, 255, 255, .06); }
+.barra-led i {
+  position: relative; width: 22px; height: 12px; border-radius: 3px; background: #4a2f05;
+}
+.barra-led i::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; opacity: 0;
+  background: linear-gradient(#ffd166, #ff9800);
+  box-shadow: 0 0 10px 2px rgba(255, 152, 0, .9), 0 0 26px 6px rgba(255, 152, 0, .45);
+  animation: lampo 1.6s infinite;
+}
+.barra-led__lato--dx i::before { animation-delay: .8s; }
+@keyframes lampo {
+  0%, 9% { opacity: 1; }
+  10%, 17% { opacity: 0; }
+  18%, 27% { opacity: 1; }
+  28%, 100% { opacity: 0; }
+}
+
+/* luci di emergenza riflesse sullo sfondo (come nella prima versione, un po' più intense) */
+.apertura__luci {
+  position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen;
+  background:
+    radial-gradient(600px 400px at 10% 20%, rgba(255, 160, 0, .24), transparent 70%),
+    radial-gradient(500px 360px at 90% 40%, rgba(255, 195, 38, .17), transparent 70%);
+  animation: lampeggio 1.6s steps(1) infinite;
+}
+@keyframes lampeggio {
+  0% { opacity: 1; }
+  25% { opacity: .35; }
+  50% { opacity: .9; }
+  75% { opacity: .25; }
+}
+
+/* la foto segue un poco il mouse */
+.apertura__foto { inset: -24px; transform: translate3d(var(--fx, 0), var(--fy, 0), 0); transition: transform .6s ease-out; }
+
+/* scritta gigante dietro i numeri */
+.numeri { position: relative; overflow: hidden; }
+.numeri__sfondo {
+  position: absolute; top: 50%; left: 0; white-space: nowrap; pointer-events: none;
+  font: 800 clamp(6rem, 16vw, 15rem)/1 var(--titoli); text-transform: uppercase;
+  color: transparent; -webkit-text-stroke: 1px rgba(255, 195, 38, .1);
+  transform: translate3d(var(--sx, 0px), -50%, 0);
+}
+.numeri__griglia { position: relative; }
+
+/* servizi: foto che compare al passaggio */
+.servizio--foto { isolation: isolate; }
+.servizio__foto {
+  position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; transform: scale(1.12); transition: opacity .6s var(--curva), transform 1.2s var(--curva);
+}
+.servizio--foto::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; opacity: 0; transition: opacity .6s;
+  background: linear-gradient(180deg, rgba(13, 14, 17, .25), rgba(13, 14, 17, .82) 45%, rgba(13, 14, 17, .95) 75%);
+}
+.servizio--foto:hover .servizio__foto, .servizio--foto:focus-within .servizio__foto { opacity: 1; transform: scale(1); }
+.servizio--foto:hover::after, .servizio--foto:focus-within::after { opacity: 1; }
+.servizio--foto:hover ul { color: #d6d8dd; }
+
+/* camioncino che percorre i passi */
+.passi__camion {
+  position: absolute; top: 14px; left: calc(37px + ((100% - 80px) * 2 / 3 + 80px) * var(--avanzamento));
+  display: grid; place-items: center; width: 46px; height: 46px; margin-left: -23px; border-radius: 50%;
+  background: var(--giallo); color: var(--asfalto); z-index: 2;
+  box-shadow: 0 0 0 6px rgba(255, 195, 38, .18), 0 10px 24px -8px rgba(255, 195, 38, .7);
+  opacity: calc(var(--avanzamento) * 20);
+}
+.passi__camion .icona { width: 24px; height: 24px; }
+
+/* pulsanti calamitati */
+[data-calamita] { transition: transform .25s var(--curva), box-shadow .3s var(--curva), color .3s; }
+
+/* chiamata fluttuante */
+.chiama-fluttuante {
+  position: fixed; right: 24px; bottom: 24px; z-index: 60;
+  display: flex; align-items: center; gap: 12px; padding: 10px 20px 10px 10px; border-radius: 999px;
+  background: var(--giallo); color: var(--asfalto); text-decoration: none;
+  box-shadow: 0 18px 40px -12px rgba(0, 0, 0, .7);
+  transform: translateY(140%); transition: transform .5s var(--curva);
+}
+.chiama-fluttuante.visibile { transform: none; }
+.chiama-fluttuante > .icona {
+  width: 44px; height: 44px; padding: 11px; border-radius: 50%; background: var(--asfalto); color: var(--giallo);
+  animation: squillo 2.6s infinite;
+}
+.chiama-fluttuante__testo { display: grid; font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; line-height: 1.2; }
+.chiama-fluttuante__testo strong { font: 700 1.25rem/1.1 var(--titoli); letter-spacing: .02em; }
+@keyframes squillo {
+  0%, 60%, 100% { transform: rotate(0); }
+  64%, 72%, 80% { transform: rotate(-14deg); }
+  68%, 76% { transform: rotate(14deg); }
+}
+
+@media (max-width: 960px) {
+  .passi__camion { display: none; }
+}
+@media (max-width: 640px) {
+  .chiama-fluttuante { display: none; }
+  .servizio__foto { opacity: .18; transform: none; }
+  .servizio--foto::after { opacity: 1; background: linear-gradient(180deg, rgba(13, 14, 17, .55), rgba(13, 14, 17, .92) 55%); }
+}
+
 /* --- Comparsa durante lo scorrimento ------------------------------------ */
 
 .js .rivela { opacity: 0; transform: translateY(40px); transition: opacity .9s var(--curva), transform .9s var(--curva); transition-delay: var(--ritardo, 0s); }
@@ -609,4 +729,5 @@ html.ferme { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   html { scroll-behavior: auto; }
   .js .rivela { opacity: 1; transform: none; }
+  .apertura__titolo .parola > span { transform: none; }
 }
