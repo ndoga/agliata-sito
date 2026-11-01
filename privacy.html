@@ -10,20 +10,22 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=2">
+  <link rel="stylesheet" href="assets/css/style.css?v=3">
 </head>
 <body>
+
+<a class="salta" href="#contenuto">Vai al contenuto</a>
 
 <header class="testata compatta">
   <div class="contenitore testata__riga">
     <a class="marchio" href="./">
-      <img class="marchio__logo" src="assets/img/logo-chiaro.png" alt="Agliata S.a.s. – Soccorso Stradale" width="900" height="262">
+      <img class="marchio__logo" src="assets/img/logo-chiaro.png" alt="Agliata S.a.s. – Soccorso Stradale, torna alla pagina principale" width="900" height="262">
     </a>
     <a class="pulsante pulsante--piccolo pulsante--contorno" href="./" style="margin-left:auto">Torna al sito</a>
   </div>
 </header>
 
-<main class="pagina-testo">
+<main class="pagina-testo" id="contenuto">
   <div class="contenitore">
     <h1>Informativa sulla privacy</h1>
     <p>Ai sensi degli articoli 13 e 14 del Regolamento (UE) 2016/679 (GDPR) ti spieghiamo come trattiamo i dati che ci
@@ -59,7 +61,10 @@
 <footer class="piede">
   <div class="contenitore piede__fondo" style="margin-top:0;border-top:0;padding-top:0">
     <span>© 2026 Agliata S.a.s. – Soccorso Stradale</span>
-    <a href="./">Torna al sito</a>
+    <span class="piede__link">
+      <a href="accessibilita.html">Accessibilità</a>
+      <a href="./">Torna al sito</a>
+    </span>
   </div>
 </footer>
 

@@ -140,6 +140,20 @@ em { font-style: normal; color: var(--giallo); }
 
 .hamburger { display: none; }
 
+/* pulsante per fermare le animazioni */
+.ferma-animazioni {
+  background: none; border: 0; padding: 0; color: inherit; font: inherit; cursor: pointer; text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.ferma-animazioni:hover { color: var(--giallo); }
+.ferma-animazioni--icona {
+  display: grid; place-items: center; flex: none; width: 40px; height: 40px; border-radius: 12px;
+  background: var(--asfalto-3); border: 1px solid var(--bordo); text-decoration: none;
+}
+.ferma-animazioni--icona .icona { width: 16px; height: 16px; }
+.ferma-animazioni--icona .icona--play, .ferme .ferma-animazioni--icona .icona--pausa { display: none; }
+.ferme .ferma-animazioni--icona .icona--play { display: block; }
+
 /* --- Apertura ----------------------------------------------------------- */
 
 .apertura {
@@ -228,7 +242,8 @@ em { font-style: normal; color: var(--giallo); }
 }
 
 /* servizi */
-.servizi { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; }
+.servizi { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+@media (max-width: 1140px) { .servizi { grid-template-columns: repeat(2, 1fr); } }
 .servizio {
   position: relative; overflow: hidden;
   padding: 40px 36px 36px; border-radius: var(--raggio);
@@ -250,7 +265,7 @@ em { font-style: normal; color: var(--giallo); }
 }
 .servizio__icona .icona { width: 30px; height: 30px; }
 .servizio:hover .servizio__icona { transform: rotate(-8deg) scale(1.08); background: var(--giallo); color: var(--asfalto); }
-.servizio h3 { font-size: 2rem; text-transform: uppercase; margin-bottom: 18px; }
+.servizio h3 { font-size: 1.8rem; padding-right: 60px; text-transform: uppercase; margin-bottom: 18px; }
 .servizio ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; color: var(--testo-tenue); }
 .servizio li { padding-left: 22px; position: relative; }
 .servizio li::before {
@@ -363,6 +378,10 @@ em { font-style: normal; color: var(--giallo); }
 .consenso input { width: 20px; height: 20px; accent-color: var(--giallo); flex: none; margin-top: 2px; }
 .consenso a { color: var(--giallo); }
 
+.modulo__nota { margin: 0; font-size: .88rem; color: var(--testo-tenue); }
+.campo-consenso.errore { color: #ff9a92; }
+.campo-consenso.errore input { outline: 2px solid #ff5a4f; outline-offset: 2px; }
+.campo.errore label { color: #ff9a92; }
 .modulo__esito { margin: 0; min-height: 1.4em; font-size: .95rem; }
 .modulo__esito.ok { color: #3ddc84; }
 .modulo__esito.ko { color: #ff7a70; }
@@ -373,10 +392,11 @@ em { font-style: normal; color: var(--giallo); }
 .piede { background: #08090b; padding: 80px 0 30px; border-top: 1px solid var(--bordo); }
 .piede__griglia { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; }
 .piede p { color: var(--testo-tenue); max-width: 320px; }
-.piede h4 { font-size: 1.2rem; text-transform: uppercase; letter-spacing: .1em; color: var(--giallo); margin-bottom: 16px; }
+.piede__titolo { font-size: 1.2rem; text-transform: uppercase; letter-spacing: .1em; color: var(--giallo); margin-bottom: 16px; }
 .piede__griglia > div:not(:first-child) { display: grid; gap: 8px; align-content: start; color: var(--testo-tenue); }
 .piede a { text-decoration: none; }
 .piede__griglia a:hover { color: var(--giallo); }
+.piede__link { display: flex; gap: 22px; flex-wrap: wrap; }
 .piede__fondo {
   display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap;
   margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--bordo);
@@ -516,6 +536,8 @@ em { font-style: normal; color: var(--giallo); }
 .pagina-testo h1 { font-size: clamp(2.6rem, 6vw, 4.4rem); text-transform: uppercase; margin-bottom: 30px; }
 .pagina-testo h2 { font-size: 1.7rem; text-transform: uppercase; margin: 40px 0 12px; color: var(--giallo); }
 .pagina-testo p, .pagina-testo li { color: var(--testo-tenue); }
+.pagina-testo li + li { margin-top: 8px; }
+.pagina-testo a { color: var(--giallo); }
 
 /* --- Schermi piccoli ---------------------------------------------------- */
 
@@ -525,10 +547,11 @@ em { font-style: normal; color: var(--giallo); }
     flex-direction: column; justify-content: center; align-items: center; gap: 26px;
     background: rgba(13, 14, 17, .97);
     clip-path: circle(0 at calc(100% - 40px) 40px);
-    transition: clip-path .6s var(--curva);
+    visibility: hidden;
+    transition: clip-path .6s var(--curva), visibility 0s .6s;
   }
   .menu a { font: 800 2.6rem var(--titoli); text-transform: uppercase; color: var(--testo); }
-  .menu.aperto { clip-path: circle(150% at calc(100% - 40px) 40px); }
+  .menu.aperto { clip-path: circle(150% at calc(100% - 40px) 40px); visibility: visible; transition: clip-path .6s var(--curva); }
   .testata__chiama { margin-left: auto; }
   .hamburger {
     display: grid; gap: 5px; place-content: center; width: 46px; height: 46px; border-radius: 12px;
@@ -572,6 +595,15 @@ em { font-style: normal; color: var(--giallo); }
 }
 
 /* --- Movimento ridotto -------------------------------------------------- */
+
+/* --- Animazioni fermate dal visitatore ---------------------------------- */
+
+.ferme *, .ferme *::before, .ferme *::after {
+  animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important;
+}
+html.ferme { scroll-behavior: auto; }
+.ferme .rivela { opacity: 1 !important; transform: none !important; }
+
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }

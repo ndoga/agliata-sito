@@ -9,6 +9,7 @@ HTML, CSS e JavaScript senza framework; PHP solo per l'invio del modulo contatti
 | --- | --- |
 | `index.html` | Pagina unica: apertura animata, servizi, come funziona, chi siamo, contatti |
 | `privacy.html` | Informativa sulla privacy |
+| `accessibilita.html` | Dichiarazione di accessibilità (riferimento WCAG 2.1 AA) |
 | `assets/css/style.css` | Stili e animazioni |
 | `assets/js/main.js` | Comparsa allo scorrimento, contatori, menu, modulo |
 | `invia.php` | Invio del modulo via `mail()` (solo su Aruba, non su GitHub Pages) |

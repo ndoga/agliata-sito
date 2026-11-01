@@ -5,6 +5,34 @@
   const doc = document.documentElement;
   doc.classList.add('js');
   const movimentoRidotto = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // animazioni spente dal sistema operativo o dal pulsante "Ferma le animazioni"
+  const fermo = () => movimentoRidotto || doc.classList.contains('ferme');
+
+  /* Pulsanti per fermare e riavviare le animazioni (WCAG 2.2.2) */
+  const pulsantiFerma = document.querySelectorAll('.ferma-animazioni');
+  const aggiornaPulsantiFerma = () => {
+    const ferme = doc.classList.contains('ferme');
+    pulsantiFerma.forEach(b => {
+      b.setAttribute('aria-pressed', String(ferme));
+      const testo = ferme ? 'Riavvia le animazioni' : 'Ferma le animazioni';
+      if (b.classList.contains('ferma-animazioni--icona')) {
+        b.setAttribute('aria-label', testo);
+        b.title = testo;
+      } else {
+        b.textContent = testo;
+      }
+    });
+  };
+  pulsantiFerma.forEach(b => b.addEventListener('click', () => {
+    const ferme = doc.classList.toggle('ferme');
+    try { localStorage.setItem('animazioni', ferme ? 'ferme' : 'attive'); } catch (e) { /* archivio non disponibile */ }
+    if (ferme) {
+      document.querySelectorAll('[data-inclina]').forEach(el => { el.style.transform = ''; });
+      document.querySelectorAll('[data-parallasse] img').forEach(el => { el.style.transform = ''; });
+    }
+    aggiornaPulsantiFerma();
+  }));
+  aggiornaPulsantiFerma();
 
   /* Intestazione compatta e barra di chiamata dopo lo scorrimento */
   const testata = document.getElementById('testata');
@@ -22,8 +50,10 @@
   const menu = document.getElementById('menu');
   if (hamburger && menu) {
     const chiudi = () => {
+      if (!menu.classList.contains('aperto')) return;
       menu.classList.remove('aperto');
       hamburger.setAttribute('aria-expanded', 'false');
+      hamburger.setAttribute('aria-label', 'Apri il menu');
       document.body.style.overflow = '';
     };
     hamburger.addEventListener('click', () => {
@@ -31,14 +61,17 @@
       hamburger.setAttribute('aria-expanded', String(aperto));
       hamburger.setAttribute('aria-label', aperto ? 'Chiudi il menu' : 'Apri il menu');
       document.body.style.overflow = aperto ? 'hidden' : '';
+      if (aperto) setTimeout(() => menu.querySelector('a').focus(), 50);
     });
     menu.querySelectorAll('a').forEach(a => a.addEventListener('click', chiudi));
-    addEventListener('keydown', e => { if (e.key === 'Escape') chiudi(); });
+    addEventListener('keydown', e => {
+      if (e.key === 'Escape' && menu.classList.contains('aperto')) { chiudi(); hamburger.focus(); }
+    });
   }
 
   /* Comparsa degli elementi durante lo scorrimento, a cascata */
   const rivela = document.querySelectorAll('.rivela');
-  if ('IntersectionObserver' in window && !movimentoRidotto) {
+  if ('IntersectionObserver' in window && !fermo()) {
     const osservatore = new IntersectionObserver(voci => {
       voci.forEach(v => {
         if (!v.isIntersecting) return;
@@ -57,7 +90,8 @@
   const contatori = document.querySelectorAll('[data-conta]');
   const conta = el => {
     const fine = +el.dataset.conta;
-    if (movimentoRidotto) { el.textContent = fine; return; }
+    if (fermo()) { el.textContent = fine; return; }
+    el.textContent = 0;
     const durata = 1600, inizio = performance.now();
     const passo = t => {
       const p = Math.min((t - inizio) / durata, 1);
@@ -101,6 +135,7 @@
   if (!movimentoRidotto && matchMedia('(hover: hover)').matches) {
     document.querySelectorAll('[data-inclina]').forEach(card => {
       card.addEventListener('pointermove', e => {
+        if (fermo()) return;
         const r = card.getBoundingClientRect();
         const x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
         card.style.setProperty('--mx', `${x * 100}%`);
@@ -132,15 +167,24 @@
 
     modulo.addEventListener('submit', async e => {
       e.preventDefault();
-      let valido = true;
+      const sbagliati = [];
+      const segna = (campo, ok) => {
+        (campo.closest('.campo') || campo.closest('.campo-consenso')).classList.toggle('errore', !ok);
+        campo.setAttribute('aria-invalid', String(!ok));
+        if (!ok) sbagliati.push(campo);
+      };
       modulo.querySelectorAll('[required]').forEach(c => {
-        const ok = c.type === 'checkbox' ? c.checked : c.value.trim() !== '' && c.checkValidity();
-        c.closest('.campo')?.classList.toggle('errore', !ok);
-        if (!ok) valido = false;
+        segna(c, c.type === 'checkbox' ? c.checked : c.value.trim() !== '' && c.checkValidity());
       });
       const email = modulo.email;
-      if (email.value && !email.checkValidity()) { email.closest('.campo').classList.add('errore'); valido = false; }
-      if (!valido) { mostra('Controlla i campi evidenziati e accetta l\'informativa.', 'ko'); return; }
+      if (email.value) segna(email, email.checkValidity());
+      if (sbagliati.length) {
+        const nomi = sbagliati.map(c => c.type === 'checkbox' ? 'consenso privacy'
+          : modulo.querySelector(`label[for="${c.id}"]`).textContent.replace('*', '').trim().toLowerCase());
+        mostra(`Da completare o correggere: ${nomi.join(', ')}.`, 'ko');
+        sbagliati[0].focus();
+        return;
+      }
 
       modulo.classList.add('invio');
       mostra('Invio in corso…', '');
@@ -161,13 +205,17 @@
       }
     });
 
-    modulo.addEventListener('input', e => e.target.closest('.campo')?.classList.remove('errore'));
+    modulo.addEventListener('input', e => {
+      (e.target.closest('.campo') || e.target.closest('.campo-consenso'))?.classList.remove('errore');
+      e.target.removeAttribute('aria-invalid');
+    });
   }
 
   /* Profondità: le foto di "Chi siamo" scorrono a velocità diverse */
   const parallasse = [...document.querySelectorAll('[data-parallasse]')];
   if (parallasse.length && !movimentoRidotto) {
     const aggiornaParallasse = () => {
+      if (fermo()) return;
       parallasse.forEach(el => {
         const r = el.getBoundingClientRect();
         if (r.bottom < 0 || r.top > innerHeight) return;
