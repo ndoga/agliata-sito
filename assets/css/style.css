@@ -531,14 +531,20 @@ em { font-style: normal; color: var(--giallo); }
 .apertura__titolo .riga:nth-child(1) .parola:nth-child(2) > span { animation-delay: .27s; }
 .apertura__titolo .riga:nth-child(2) .parola:nth-child(1) > span { animation-delay: .45s; }
 
-/* "noi." portato dal carro gru (movimento gestito da main.js) */
+/* scritta Agliata (lettering del logo) portata dal carro gru (movimento gestito da main.js) */
 .apertura__titolo { position: relative; }
-.noi { display: inline-block; position: relative; will-change: transform; }
-.noi__testo { display: inline-block; transform-origin: 50% 0; }
-.noi__base { display: inline-block; width: 0; height: 0; vertical-align: baseline; }
+.nome { display: inline-block; position: relative; will-change: transform; }
+/* le lettere del logo occupano circa il 54% inferiore dell'immagine: con 1.3em hanno la stessa altezza delle maiuscole;
+   il margine negativo evita che la gru del logo allarghi lo spazio tra le righe */
+.nome__logo {
+  display: inline-block; height: 1.3em; width: auto; max-width: none; margin-top: -.5em;
+  vertical-align: baseline; transform-origin: 50% 0;
+  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, .55));
+}
+.nome__base { display: inline-block; width: 0; height: 0; vertical-align: baseline; }
 /* nascosto finché parte l'animazione; se lo script non parte, compare comunque dopo 4 s */
-.js .noi[data-attesa] { opacity: 0; animation: compari-noi 0s 4s forwards; }
-@keyframes compari-noi { to { opacity: 1; } }
+.js .nome[data-attesa] { opacity: 0; animation: compari-nome 0s 4s forwards; }
+@keyframes compari-nome { to { opacity: 1; } }
 
 .carro {
   position: absolute; left: 0; top: 0; z-index: 3; display: none; pointer-events: none;
@@ -548,6 +554,7 @@ em { font-style: normal; color: var(--giallo); }
 .carro__disegno { width: 100%; height: 100%; overflow: visible; }
 .carro__braccio { stroke: var(--giallo); stroke-width: 11; stroke-linecap: round; }
 .carro__braccio-ombra { stroke: #1a1b20; stroke-width: 15; stroke-linecap: round; }
+.carro__braccio-luce { stroke: rgba(255, 255, 255, .45); stroke-width: 2.5; stroke-linecap: round; }
 .carro__puleggia { fill: #2b2e37; stroke: var(--giallo); stroke-width: 3; }
 .carro__torretta, .carro__telaio { fill: #2b2e37; }
 .carro__cassone, .carro__cabina { fill: var(--giallo); stroke: #1a1b20; stroke-width: 3; }
@@ -564,6 +571,11 @@ em { font-style: normal; color: var(--giallo); }
 .carro__cavo {
   position: absolute; width: 3px; transform: translateX(-50%); background: #d4d7dd;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, .35);
+}
+.carro__funi {
+  position: absolute; top: 100%; left: 50%; overflow: visible; max-width: none;
+  fill: none; stroke: #d4d7dd; stroke-width: 2.5; stroke-linecap: round;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .6));
 }
 .carro__gancio {
   position: absolute; left: 50%; top: 100%; width: 18px; height: 26px; max-width: none; transform: translate(-50%, -2px);
@@ -678,6 +690,9 @@ em { font-style: normal; color: var(--giallo); }
   .passi__camion { display: none; }
 }
 @media (max-width: 640px) {
+  /* su telefono la scritta Agliata ha una riga tutta sua, così la gru del logo non copre "Arriva" */
+  .nome { display: block; width: fit-content; margin-top: .12em; }
+  .nome__logo { margin-top: 0; }
   .chiama-fluttuante { display: none; }
   .servizio__foto { opacity: .18; transform: none; }
   .servizio--foto::after { opacity: 1; background: linear-gradient(180deg, rgba(13, 14, 17, .55), rgba(13, 14, 17, .92) 55%); }
@@ -762,7 +777,7 @@ em { font-style: normal; color: var(--giallo); }
 }
 html.ferme { scroll-behavior: auto; }
 .ferme .rivela { opacity: 1 !important; transform: none !important; }
-.ferme .noi[data-attesa] { opacity: 1; }
+.ferme .nome[data-attesa] { opacity: 1; }
 
 
 @media (prefers-reduced-motion: reduce) {
@@ -770,5 +785,5 @@ html.ferme { scroll-behavior: auto; }
   html { scroll-behavior: auto; }
   .js .rivela { opacity: 1; transform: none; }
   .apertura__titolo .parola > span { transform: none; }
-  .js .noi[data-attesa] { opacity: 1; animation: none; }
+  .js .nome[data-attesa] { opacity: 1; animation: none; }
 }
